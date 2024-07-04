@@ -1,0 +1,215 @@
+Direct Communtion:
+------------------
+
+A ------ B
+
+send(P,message);     // Send a message from process P
+receive(Q,message);  // Receive a message from process Q
+
+
+-> Compulsory from whom the message is sending
+-> Receiving is important, not mandatory to  know from whom this message is received
+
+
+Indirect Communication :
+-----------------------
+
+A ----   |X|  -----  B
+|X| - mail box
+
+A send to X
+B receives from B
+Both A and B don't know the receiver nor the sender
+
+send(A,message);     // send from A
+receive(A,message);  // receive from A
+
+Mail box need to be share
+Only 2 process can communicate at once
+Maintaining the links is difficult   -> Job  of OS
+
+
+                       P2
+P1 --------- |X|
+                       P3
+
+Which one to connect, OS takes care of it based on Scheduling Algorithms
+
+
+Synchronization :
+-----------------
+
+Synchronous  - Blocking
+ - Block sender
+ - Block receiver
+Asynchronous - Non Blocking
+ - Non-Block sender
+ - Non-Block receiver
+
+Buffer:
+*Zero Capacity
+*Bounded Capacity
+*Unbounded Capacity 
+
+-Refer slides for explanation
+
+--------------------------------------------------------------------------------------
+
+ PIPES
+-------
+
+System Calls: -> 5
+
+1.
+2.
+3.
+4.
+5.
+
+Unnamed Pipes : Can communicate with the  linked pipes. Parent and Child (Ancestory)
+fd[0] - sending/writing data
+fd[1] - receiving data               //fd - file descripter
+
+ |S|      |R|
+
+When Sender is writing the data its reader should be blocked  &&
+The Receivers reading block should be enabled and its writing block is blocked
+LOCK's
+
+pipe()
+diagram slides
+Two ways to picture the ______
+
+Parent Child Kernel Diagram
+
+popen() and pclose()
+		
+	program{
+		_________
+		_____
+		__	
+		_______
+	}
+
+
+---------------------------------------------------------------------------------------
+
+ FIFO
+------
+
+
+It is called as Named pipe
+
+	program{
+		_________
+		_____
+		__	
+		_______
+	}
+
+Messag Queue
+
+Create a message id first
+message sent and received
+
+-----------
+Semaphores
+-----------
+Shared Memory
+-------------
+
+________________________________________________________________________________
+
+Thredsand Concurrency
+
+Thread is basic unit of exaction or CPU utilisation
+
+		Pgm
+
+	P1	P2	P3
+
+
+
+
+Attributes :
+Thread Id
+Program counter
+Register Set
+Stamp
+
+
+
+All thread should we having the same Process
+
+Code section
+Data section
+& other resources should/can be shared
+
+This is light weight thread
+
+
+
+Slide:
+
+Single and Multithreaded processes
+
+Diagram
+
+Benefits :-
+Responsiveness_ : If  something happens to a particular thread it transfers all its data to other and collaps
+Resources sharing_
+Economic_
+Scalability_
+
+
+Process vs. Threads
+
+Concurrency vs. Parallelism
+
+Data and Task Parallelism
+Diagram: Slides
+
+Formula  :- Notes
+
+		Amdhal's Law 
+	      ----------------
+* Formula
+* Graph
+* YT it
+______________________________________________________________________________________
+
+
+User Threads and Kernal Threads
+--------------------------------
+
+______________________________________________________________________________________
+
+Multithreading
+
+* Many to One
+* One to One
+* Many to Many
+* Two level Model
+
+
+-----------------------
+Ptreads
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

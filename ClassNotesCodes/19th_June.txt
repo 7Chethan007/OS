@@ -1,0 +1,160 @@
+Shell Commnads:
+
+BASH is a CASE SENSITIVE 
+this is born shell
+echo $SHELL  -> /bin/bash
+$USER  ->   chethan: command not found
+$PWD present working directory
+$PATH
+echo to print
+echo $BASH_VERSION -> to check the version of BASH --> 5.1.16(1)-release
+
+
+
+To create a new variable : 
+MY_VAR="Hello world"
+echo $MY_VAR //To display the the resuts
+Hello world
+
+bash
+echo $MY_VAR
+
+Now we won't get any value because when we use 'bash' we are creating a child process and the child doesn't now the value
+
+So we 
+$exit and come out
+And 'export MY_VAR="Hello World"
+bash
+echo $MY_VAR
+
+with export we are setting the value to child 
+
+We can revert this also by doinr 
+unset MY_VAR
+echo $MY_VAR   -> Now we don't get any value
+
+
+
+CRON SHELL:
+
+crontab -c
+
+min-hour-month
+
+
+
+notes 1
+
+
+Don shell in command
+
+-vim 2.sh     filename.sh sh=shell programming
+code in editor
+
+code:
+
+#!/bin/bash
+if [ -f "File.txt" ];
+then
+        echo "File is exit"
+else
+        echo "File not exit"
+fi 
+
+How to come out ? 
+-> Esc : wq
+
+Press 'I' if you want to edit the program again after entering the editor again
+
+To execute
+chmod +x 2.sh
+./2.sh
+-> File is not exit
+
+
+
+
+2nd Program
+
+->  vim varibleCheck.sh
+
+#!/bin/bash
+m=1
+n=2
+if [ $n -eq $m ];
+then
+        echo "Both variables are the same"
+else
+        echo "Both variables are different"
+fi 
+
+-> chmod +x varibleCheck.sh
+-> ./varibleCheck.sh
+Ans: Both variables are different
+
+
+
+
+
+3rd program :
+Using for loop print 1 to 5
+
+vim for.sh
+
+#!/bin/bash
+
+for num in {1..5}
+do
+        echo Number: $num
+done  
+
+chmod +x for.sh
+./for.sh
+>
+Number: 1
+Number: 2
+Number: 3
+Number: 4
+Number: 5
+
+
+
+
+
+4th Program : Continue
+
+#!/bin/bash
+for var in {6..12}
+do
+    if [[ $var -eq 10 ]]
+    then
+        continue
+    fi
+    echo "value${var}"
+done
+
+
+5th Progrma :
+
+#!/bin/bash
+for var in {6..12}
+do
+    if [[ $var -eq 10 ]]
+    then
+        continue
+    fi
+    echo "value${var}"
+done
+break
+
+
+
+
+
+Using ChatGpt learn the codes
+
+Theory :
+
+Multilevel scheduling
+
+

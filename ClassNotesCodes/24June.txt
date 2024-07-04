@@ -1,0 +1,109 @@
+ Software Approaches
+---------------------
+
+Data Consistency
+
+Shared memory shared by different process needs to be updated every time  process changes an variable
+
+Producer & Consumer            -> Programs
+________   ________
+
+here counter variable keeps the value in buffer
+Problem:
+Race Condition between the processes to update the buffer
+
+Race Condition (Another Example)
+
+Critical Section Problem :->
+
+No processes can interrupt the process in critical section till it finishes its execution
+Eg: notes
+
+do {
+	|enter section|
+		critical section
+	|exit section|
+		reminder section   //saying that he finished the task so that other process can procede
+} while(true);
+
+Problems here / overcome :
+* Mutual Exclusion -> till P1 completes the take , comes out and informs other processes have to wait
+* Progress         -> What to do if it takes infinite time, So we have to write algorithm in a way it 		      takes only finite time. As other processes cannot be postponed indefinitely.
+* Bounded waiting  -> Process can exist in the critical section only till the bounded set time exceeds.
+
+
+
+Algorithms or Solutions for the above :
+---------------------------------------
+
+Peterson Solution :
+// humble algorithm
+
+Code for process i
+do {
+	flag[i] = TRUE
+	turn = j
+	while (flag[j]&&turn==j);  // because of the semicolon and here the condition true and false it 					//exits the loop and goes to the next line 
+	  critical session		// enter CS and locks by setting other while loop (true)
+	flag[i] = FALSE	
+	Reminder section
+} while(TRUE)
+
+Code for process j
+do {
+	flag[j] = TRUE
+	turn = i
+	while (flag[i]&&turn==i);  //  while loop nothing is written while(true && true)___; enters 					//into infinite loop till flag[i] is declared false and while 					// fails 
+	  critical session
+	flag[j] = FALSE	
+	Reminder section
+} while(TRUE)
+
+
+
+/* Once refer Vibha's notes for better explanation */
+
+turn -> says whose turn is it to get into critical section
+flag -> who all are ready to enter the critical section
+
+In IPC every where it's using Shared memory
+All the processes are running parallelly  {Pi and Pj}
+
+Changes made in one place it needs to change in the shared memory
+
+Analysis of Algorithm -> Notes
+
+
+
+Test & set lock
+---------------
+0 -> lock
+1 -> unlock
+
+Test if not locked lock and run
+If it's locked it needs to wait
+
+Atomic variable :-> If this enters the process it's can't be interrupted by any of the processes.
+______________-_    It is non-interruptible.
+
+
+test_and_set instruction
+___________________________
+
+Slide for algorithm && Vibha's notes for explanation
+
+
+
+
+compare_and_swap
+________________
+
+
+(not so important ) Bounder waiting mutual function // this is for array of numbers
+                   ________________________________
+
+MAM's slides for algorithms and explanation if didn't understood Vibha's notes
+
+
+Execute one of the codes we went through on Saturday
+

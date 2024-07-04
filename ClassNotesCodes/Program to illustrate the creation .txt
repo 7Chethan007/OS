@@ -1,0 +1,203 @@
+Program to illustrate the creation of process
+
+cat /proc/cpuinfo|more : This command shows the information about the system and its cpu components
+more /proc/cpuinfo : This is an alternative command is also the same.
+
+
+
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include<sys/wait.h>
+
+Required header files
+
+int main()
+{
+pid_t pid;
+I* fork a child process *I
+pid =fork();
+if (pid < 0) { I* error occurred *I
+fprintf(stderr, "Fork Failed");
+return 1;
+}
+else if (pid == 0) { I* child process *I
+execlp(“/bin/ls","ls",NULL);
+}
+else { I* parent process *I
+I* parent will wait for the child to complete *I
+wait (NULL) ;
+printf("Child Complete");
+}
+return 0;
+}
+
+
+This is from the slide 
+Down mam:->
+
+
+
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include<sys/wait.h>
+
+Required header files
+int main(){
+	pid_t pid;
+	pid = fork();
+	int status;
+	if(pid<0) { 
+		printf("fork failure\n");
+		exit(1);
+	} else if(pid == 0) {
+		printf("Child process is created\n");
+		printf("id of parent = %d, id of child = %d \n",getppid(),getpid());
+		// When is Child is created it can we use this commands to get its parent id and its id
+	} else {
+		printf("Parent process\n");
+		printf("id of parent = %d, id of child = %d \n",getpid(),pid);
+		// When the parent is created these are the commands to get there id
+	}	
+
+	return 0;
+}
+
+
+ctrl+s
+ctrl+x
+cc fork.c
+./a.out
+
+->
+Parent process
+id of parent = 5581, id of child = 5582
+Child process is created
+id of parent = 5581, id of child = 5582
+
+
+We want child to execute first and parent next 
+So we'll use sleep() & wait
+
+
+#include <stdlib.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include<sys/wait.h>
+
+Required header files
+int main(){
+	pid_t pid;
+	pid = fork();
+	int status;
+	if(pid<0) { 
+		printf("fork failure\n");
+		exit(1);
+	} else if(pid == 0) {
+		printf("Child process is created\n");
+		printf("id of parent = %d, id of child = %d \n",getppid(),getpid());
+		// When is Child is created it can we use this commands to get its parent id and its id
+	} else {
+		//sleep(5);
+		//wait(NULL);
+
+		//int w1 = wait(&status);  //This gives the status of it and display it
+		//printf("%d  ",w1);
+
+
+		int w2 = waitpid(pid,&status,0);
+		printf("%d',w2);
+		
+		
+
+		printf("Parent process\n");
+		printf("id of parent = %d, id of child = %d \n",getpid(),pid);
+		// When the parent is created these are the commands to get there id
+	}	
+
+	return 0;
+}
+
+
+clicked on phone
+//other programs parent under child
+// & parent-chil-grandchild
+slide exec()
+
+sleep and waait
+in wait : wait , waited, waitpid
+exit
+
+
+
+// ESA question
+use a variable y
+increment a y in child and parent pracess
+
+
+  GNU nano 6.2                          incrementProcess.c *                                  #include <stdlib.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include<sys/wait.h>
+
+int main() {
+	pid_t p1;
+	int y = 0;
+	p1 = fork();
+	
+	if(p1 > 0) {
+		y = y - 1;
+		printf("This is parent, Process Id = %d, y = %d\n", getpid(), y);
+	} else if (p1 == 0) {
+		y = y + 1;
+		printf("This is child, Process Id = %d, Parent Process Id = %d, y = %d\n", getpid(), getppid(), y);
+	} else {
+		printf("Fork failed");
+	}
+
+
+        return 0;
+}
+
+Inside this code in parent or child do the same thing again to get grandchild details
+
+Grandchild:
+
+
+#include <stdlib.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include<sys/wait.h>
+
+int main() {
+	pid_t p1,p2;
+	int y = 0;
+	p1 = fork();
+	
+	if(p1 > 0) {
+		y = y - 1;
+		printf("This is parent, Process Id = %d, y = %d\n", getpid(), y);
+	} else if (p1 == 0) {
+		p2 = fork();
+		if (p2 == 0) {
+			wait(NULL);
+		} else if (p2 == 0) {
+			y = y + 5;
+			printf("This is grandchild. Process Id = %d, Parent Process Id =  %d, y = %d\n", getpid(), getppid(), y);
+			exit(0);
+		}
+		
+		//////////check in photo for code and output for latest code.
+
+	} else {
+		printf("Fork failed");
+	}
+
+
+        return 0;
+}
+

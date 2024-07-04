@@ -1,0 +1,422 @@
+CPU Scheduling
+
+Preemptive and Non-Preemptive
+
+Graph w.r.t cpu burst
+
+Preemptive
+CPU scheduling takes place in these 4 :   _ _ _ _
+
+
+Scheduling criteria
+
+Scheduling Algorithms
+
+
+Afternoon Session :
+Coding :
+
+
+----------------------------------------------------------------------------------------
+1.Create an orphan Process
+
+This does not explicitly handle the child process exiting, but since the parent does not sleep or wait for the child, it might also create a zombie process if the parent exits before the child.
+
+
+vim orphan.c
+
+#include <stdlib.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main()
+{
+    // Create a child process
+    int pid = fork();
+
+    if (pid > 0) {
+        printf("in parent process Id = %d\n", getpid());
+    }
+    // Note that pid is 0 in child process
+    // and negative if fork() fails
+    else if (pid == 0)
+    {
+        sleep(30);
+        printf("in child process, process id = %d, parent process Id = %d\n", getpid(), getppid());
+    }
+    else {
+        // fork() failed
+        printf("fork() failed\n");
+        return 1;
+    }
+
+    return 0;
+}
+
+
+First parent process runs,
+else if
+sleeps for 30 sec 
+then we get different parent process
+This is because of 'init process' when the child becomes orphan it allocates the child to any other parent doesn't let it to be orphan.
+
+
+
+Output :
+in parent process Id = 5824
+After 30 sec
+in child process, process id = 5825, parent process Id = 394
+
+
+
+
+Forking a Process:
+
+int pid = fork(); creates a new process. The fork() function returns twice: once in the parent process and once in the child process.
+In the parent process, pid will be greater than 0, and in the child process, pid will be 0. If fork() fails, it returns a negative value.
+
+The parent process prints its process ID immediately after forking the child process.
+The child process sleeps for 30 seconds before printing its message, including its own process ID and its parent's process ID.
+The parent's process ID (getppid()) in the child process will be correct as long as the parent process is still running. If the parent process terminates before the child wakes up, the child’s parent process ID may change to 1 (the init process).
+
+
+------------------------------------------------------------------------------------------
+
+
+2.Zomibie Process
+
+Creates a zombie process because the parent sleeps for a long time while the child exits quickly
+
+
+#include <stdlib.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main() 
+{  
+    pid_t pid = fork(); 
+
+    if (pid > 0) {
+        sleep(50); 
+	printf("In Parent\n");
+     } else if (pid == 0)  {       
+        printf("In Child\n");
+        exit(0); 
+     }
+    return 0; 
+} 
+
+
+output :
+In Child    after 50 sec it prints
+In Parent
+
+
+
+The parent process sleeps for 50 seconds before printing its message, allowing the child process to finish and exit almost immediately.
+The child process prints its message and exits quickly, becoming a "zombie" until the parent process terminates or calls wait().
+
+
+
+-------------------------------------------------------------------------------------------
+
+
+3.Calculate the waiting time
+
+
+This code calculates the average waiting time for a set of processes based on their burst times (execution times). It uses a simple scheduling algorithm where it assumes processes arrive at the same time and are executed one after the other in the order they are input.
+
+#include <stdlib.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main()
+{
+        int bt[20], p[20],wt[20],i,j,n,total=0,pos,temp;
+        float avg_wt;
+        printf("Enter number of process: ");
+        scanf("%d\n",&n);
+
+        if (n > 20 || n <= 0) {
+        printf("Invalid number of processes. Please enter a number between 1 and 20.\n");
+        return 1;
+        }
+
+        printf("Entet Burst time: \n");
+        for( i= 0; i<n;i++) {
+                printf("p %d:",i+1);
+                scanf("%d",&bt[i]);
+                p[i] = i+1;  //contains process number
+        }
+        wt[0] = 0; // waiting time for first process will be zero
+
+        //calculate waiting time
+        for(i = 1; i<n;i++) {
+                wt[i] = 0;
+                for(j=0;j<i;j++){
+                        wt[i]+=bt[j];
+                }
+                total+=wt[i];
+        }
+        avg_wt = (float)total/n; //average waiting time
+        printf("The average waiting time = %f\n",avg_wt);
+
+}
+
+
+Initialization:
+bt[20]: An array to store the burst times of up to 20 processes.
+p[20]: An array to store the process numbers.
+wt[20]: An array to store the waiting times of the processes.
+i, j, n: Loop control variables and n for the number of processes.
+total: A variable to accumulate the total waiting time.
+avg_wt: A variable to store the average waiting time.
+
+Input:
+The user is prompted to enter the number of processes.
+The burst time for each process is then input by the user.
+
+Waiting Time Calculation:
+The waiting time for the first process (wt[0]) is set to 0.
+For each subsequent process, the waiting time is the sum of the burst times of all previous processes. This is calculated using nested loops.
+The total waiting time is accumulated in the variable total.
+
+Average Waiting Time Calculation:
+The average waiting time is calculated by dividing the total waiting time by the number of processes.
+The average waiting time is printed.
+
+
+
+
+Enter number of processes: 4
+Enter Burst time:
+p1: 5
+p2: 8
+p3: 12
+p4: 6
+The average waiting time = 7.500000
+
+
+
+
+
+The waiting times would be:
+
+p1: 0 (first process)
+p2: 5 (p1's burst time)
+p3: 5 + 8 = 13 (sum of p1 and p2's burst times)
+p4: 5 + 8 + 12 = 25 (sum of p1, p2, and p3's burst times)
+Total waiting time: 0 + 5 + 13 + 25 = 43
+
+Average waiting time: 43 / 4 = 10.75
+
+Enter number of process: 3
+24
+Entet Burst time:
+p 1:p 2:3
+p 3:3
+The average waiting time = 17.000000
+
+-------------------------------------------------------------------------------------------
+
+4. Turn Around Time
+
+
+#include <stdlib.h>
+#include <sys/types.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main()
+{
+    int bt[20], p[20], wt[20], tat[20], i, j, n, total_wt = 0, total_tat = 0;
+    float avg_wt, avg_tat;
+
+    printf("Enter number of processes: ");
+    scanf("%d", &n);
+
+    if (n > 20 || n <= 0) {
+        printf("Invalid number of processes. Please enter a number between 1 and 20.\n");
+        return 1;
+    }
+
+    printf("Enter Burst time:\n");
+    for (i = 0; i < n; i++) {
+        printf("p%d: ", i + 1);
+        scanf("%d", &bt[i]);
+        p[i] = i + 1;  // Contains process number
+    }
+
+    wt[0] = 0; // Waiting time for first process will be zero
+
+    // Calculate waiting time
+    for (i = 1; i < n; i++) {
+        wt[i] = 0;
+        for (j = 0; j < i; j++) {
+            wt[i] += bt[j];
+        }
+        total_wt += wt[i];
+    }
+
+    avg_wt = (float)total_wt / n; // Average waiting time
+
+    // Calculate turnaround time
+    for (i = 0; i < n; i++) {
+        tat[i] = bt[i] + wt[i]; // Turnaround time = burst time + waiting time
+        total_tat += tat[i];
+    }
+
+    avg_tat = (float)total_tat / n; // Average turnaround time
+
+    printf("\nProcess\tBurst Time\tWaiting Time\tTurnaround Time\n");
+    for (i = 0; i < n; i++) {
+        printf("p%d\t%d\t\t%d\t\t%d\n", p[i], bt[i], wt[i], tat[i]);
+    }
+
+    printf("\nAverage Waiting Time = %f", avg_wt);
+    printf("\nAverage Turnaround Time = %f\n", avg_tat);
+
+    return 0;
+}
+
+
+
+Enter number of processes: 4
+Enter Burst time:
+p1: 5
+p2: 8
+p3: 12
+p4: 6
+
+Process Burst Time  Waiting Time  Turnaround Time
+p1      5           0             5
+p2      8           5             13
+p3      12          13            25
+p4      6           25            31
+
+Average Waiting Time = 10.750000
+Average Turnaround Time = 18.500000
+
+
+
+-------------------------------------------------------------------------------------------
+//5. FCFS
+
+5. SJF Shortest Job First  using Bubble or selection sort
+
+
+#include <stdio.h>
+
+void swap(int *a, int *b) {
+    int temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+void sjf(int bt[], int at[], int n) {
+    int i, j, min, temp, wt[n], tat[n], ct[n], completed = 0;
+    float total_wt = 0, total_tat = 0;
+
+    // Initialize completion time, waiting time, and turnaround time arrays
+    for (i = 0; i < n; i++) {
+        ct[i] = 0;
+        wt[i] = 0;
+        tat[i] = 0;
+    }
+
+    // Sort processes based on arrival time using bubble sort
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (at[j] > at[j + 1]) {
+                swap(&at[j], &at[j + 1]);
+                swap(&bt[j], &bt[j + 1]);
+            }
+        }
+    }
+
+    // Execute processes
+    for (i = 0; i < n; i++) {
+        min = i;
+        for (j = i + 1; j < n; j++) {
+            if (bt[j] < bt[min] && at[j] <= ct[i]) {
+                min = j;
+            }
+        }
+        swap(&bt[i], &bt[min]);
+        swap(&at[i], &at[min]);
+
+        ct[i + 1] = ct[i] + bt[i];
+        tat[i] = ct[i + 1] - at[i];
+        wt[i] = tat[i] - bt[i];
+        completed++;
+    }
+
+    printf("\nProcess\tArrival Time\tBurst Time\tCompletion Time\tTurnaround Time\tWaiting Time\n");
+    for (i = 0; i < n; i++) {
+        total_wt += wt[i];
+        total_tat += tat[i];
+        printf("P%d\t%d\t\t%d\t\t%d\t\t%d\t\t%d\n", i + 1, at[i], bt[i], ct[i], tat[i], wt[i]);
+    }
+
+    printf("\nAverage Waiting Time: %.2f", total_wt / n);
+    printf("\nAverage Turnaround Time: %.2f\n", total_tat / n);
+}
+
+int main() {
+    int n, i;
+
+    printf("Enter the number of processes: ");
+    scanf("%d", &n);
+
+    int bt[n], at[n];
+
+    printf("Enter Burst Time and Arrival Time for each process:\n");
+    for (i = 0; i < n; i++) {
+        printf("Process %d: ", i + 1);
+        scanf("%d %d", &bt[i], &at[i]);
+    }
+
+    sjf(bt, at, n);
+
+    return 0;
+}
+
+
+
+---------------------------------------------------------------------------------------
+
+6. Program for Priority Scheduling Algorithm using Bubble or selection sort
+7. SRTF
+8. Round Roubin
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

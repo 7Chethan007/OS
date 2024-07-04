@@ -1,0 +1,79 @@
+1.Programs
+
+[?2004l
+Enter length of the reference string: 6
+Enter the reference string: 3 5 7 3 21  8
+Enter the number of frames: 3
+
+LRU PageReplacement process--
+3	-1	-1	PF No. -- 1
+3	5	-1	PF No. -- 2
+3	5	7	PF No. -- 3
+3	5	7	
+3	2	7	PF No. -- 4
+3	2	8	PF No. -- 5
+
+The number of page faults using LRU are 5
+[?2004h
+
+
+2.Programs
+
+[?2004l
+
+Enter length of the reference string: 7
+
+Enter the reference string: 1 3 7 3 2 9 3
+
+Enter the number of frames: 3
+
+The Page Replacement Process: 
+	1	-1	-1	PF No. 1
+	1	3	-1	PF No. 2
+	1	3	7	PF No. 3
+	1	3	7
+	2	3	7	PF No. 4
+	2	9	7	PF No. 5
+	2	9	3	PF No. 6
+
+The number of Page Faults using FIFO are 6
+[?2004h
+
+
+3.
+[?2004l
+Enter number of frames: 3
+Enter number of pages: 10
+Enter page reference string: 4 7 2 9 8 74    09  7 6 5
+
+4	-1	-1	
+4	7	-1	
+4	7	2	
+9	7	2	
+8	7	2	
+8	7	2	
+0	7	2	
+0	7	2	
+6	7	2	
+5	7	2	
+
+Total Page Faults = 8[?2004h
+
+
+4.
+
+
+
+
+5.
+
+
+6.
+
+[?2004l
+Enter  number: 6
+Enter base address (in hexadecimal format): ^^?  3E8
+Enter  limit (in hexadecimal format): C
+Enter offset (in hexa): 5
+Physical address: 0x03ED
+[?2004h

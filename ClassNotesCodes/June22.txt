@@ -1,0 +1,278 @@
+Yesterday 4 (1/2)  slide content finished
+
+
+Pthread 
+
+#include<pthread.h>
+#include<stdio.h>
+#include<stdlib.h>
+
+int sum;
+void *runner(void *param);
+
+int main(int argc, char *argv[]) {
+        pthread_t tid;
+        pthread_attr_t attr;
+
+        if(argc != 2)
+        {
+                fprintf(stderr,"usage: a.out <integer value>\n");
+                return -1;
+        }
+        if (atoi(argv[1]) < 0)
+        {
+                fprintf(stderr,"%d must be >= 0\n",atoi(argv[1]));
+                return -1;
+        }
+
+        pthread_attr_init(&attr);
+        pthread_create(&tid,&attr,runner,argv[1]);
+        pthread_join(tid,NULL);
+
+        printf("Sum = %d\n",sum);
+}
+
+void *runner(void *param)
+{
+                int i, upper = atoi(param);
+                sum = 0;
+
+                for(i = 1; i <= upper; i++)
+                        sum += i;
+
+                pthread.exit(0);
+}
+
+
+
+Output :
+chethan@LAPTOP-7B9INDT1:~/Minors/Unit2$ gcc pthread.c -o pthreads
+chethan@LAPTOP-7B9INDT1:~/Minors/Unit2$ ./pthreads
+usage: a.out <integer value>
+chethan@LAPTOP-7B9INDT1:~/Minors/Unit2$ ./pthreads -3
+-3 must be >= 0
+chethan@LAPTOP-7B9INDT1:~/Minors/Unit2$ ./pthreads 3
+Sum = 6
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------
+
+Thread Scheduling
+-----------------
+
+* PCS
+* SCS
+
+
+pgm:
+Pthread Scheduling API
+
+
+
+
+
+
+Slide 4 Completed
+_________________________________________________________________________________
+
+
+Slide 5
+
+Windows Multithreaded C Program
+
+
+
+Slide 5 Completed
+
+
+___________________________________________________________________________
+
+
+
+Very Important :
+Program on Pipes and Shared Memory
+
+
+
+Programs :
+
+1. Program to demo p pipe
+
+#include<stdio.h>
+#include<string.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
+
+#define BUFFER_SIZE 25
+#define READ_END 0
+#define WRITE_END 1
+
+int main() 
+{
+	char write_msg[BUTTER_SIZE] = "Greetings";
+	char read_msg[BUFFER_SIZE] = "";
+	int fd[2];
+	pid_t pid;
+
+	pid = fork();
+
+	// create a pipe
+	if(pipe(fd) == -1) {
+		printf("Pipe failed\n");
+		return 1;
+	}
+
+	if(pid > 0)
+	{
+		close(fd[write_end]); //close unused end of file
+		write(fd[WRITE_END], write_msg, strlen(write_msg)+1);  // write to the pipe
+		
+		close(fd[WRITE_END]);
+		wait(NULL);
+	}	
+	else if (pid == 0)
+	{
+		close(fd[WRITE_END]);
+		read(fd[READ_END],read_msg, BUFFER_SIZE);
+		printf("child process read -%s\n",read_msg);
+		close(fd[READ_END]);
+	}
+	else
+	{
+		printf("Fork Failed");
+		return 1;
+	}
+}
+
+
+
+
+____________________________________
+
+2. Shared Memory
+
+a).
+
+#include<stdio.h>
+#include<string.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
+#include<sys/shm.h>
+#include<stdlib.h>
+
+int main() {
+
+void *shared_memory; char buff[100] = "";
+
+int shmid 0;
+
+shmid shmget((key_t)2345, 1024, 0666); printf("Key of shared memory is %d\n", shmid);
+
+shared_memory shmat(shmid, NULL, 0); //process attached to the shared memory
+
+segment printf("Process attached at %p\n", shared_memory); //print the address where the shared memory segment is attached to this process
+
+printf("Data read from shared memory is: %s\n", (char *)shared_memory);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+b).
+#include<stdio.h>
+#include<string.h>
+#include<unistd.h>
+#include<sys/shm.h>
+#include<stdlib.h>
+ int main() {
+	void *shared_memory;
+	 char buff[100] = "";
+	int shmid = 0;
+
+	shmid = shmget((key_t)2345, 1024, 0666|IPC_CREAT);
+	printf("Key of shared memory is %d\n",shmid);
+	shared_memory = shmat(shmid, NULL, 0);
+	printf("Process attached at %p\n",shared_memory);
+	printf("Enter some data to be written to the shared memory segment\n");
+	read(0,buff,100);
+	sleep(100);
+}
+
+
+
+Open 2 terminals
+
+Terminal 1:
+gcc shm_write.c -0 w
+gcc shm_read.c -0 r
+./w
+_____
+_______
+__
+hh
+
+
+Terminal 2:
+./r
+_______
+_________
+_______:hh       // read from the terminal 1
+
+
+a) Sachine sent the pic
+
+________________________________________________
+
+Message Queue
+
+
+
+
+2 Tearminals
+
+T1:
+gcc fifo_writer.c -o writer
+gcc fifo_read.c -o reader
+
+T2 :
+./reader
+//cursor blinking
+
+T1 :
+./writer
+kkkk
+
+T2 :
+Information read: kkkk
+
+
+
+_______________________________________________________
+
+Message Queue
+RoundRoundin
+SRTF
+
+
+
+
+
